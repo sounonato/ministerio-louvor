@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ministério de Louvor — Fluxograma</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gold:#C9A84C;
+  --gold-light:#F0D080;
+  --dark:#0E0E12;
+  --dark2:#16161C;
+  --dark3:#1E1E26;
+  --dark4:#26262F;
+  --purple:#7B6FD4;
+  --purple-light:#A89EE8;
+  --green:#2E9E72;
+  --green-light:#5DC49A;
+  --orange:#D4743A;
+  --orange-light:#F0A060;
+  --gray:#6B6B78;
+  --gray-light:#9898A8;
+  --red:#C04A30;
+  --text:#F0EFE8;
+  --text2:#B0AFA8;
+  --text3:#707068;
+  --border:rgba(255,255,255,0.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* Header */
+.header{padding:40px 40px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.header-left h1{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--gold);letter-spacing:0.02em}
+.header-left p{font-size:13px;color:var(--text3);margin-top:4px;letter-spacing:0.04em;text-transform:uppercase}
+.header-badge{font-size:11px;color:var(--gold);border:1px solid rgba(201,168,76,0.3);padding:5px 12px;border-radius:20px;letter-spacing:0.06em;text-transform:uppercase;background:rgba(201,168,76,0.06)}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;padding:20px 40px 0;flex-wrap:wrap}
+.tab{padding:8px 18px;border-radius:8px 8px 0 0;border:1px solid transparent;background:transparent;color:var(--text3);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;letter-spacing:0.03em}
+.tab:hover{color:var(--text2);background:var(--dark3)}
+.tab.active{background:var(--dark3);color:var(--gold);border-color:var(--border);border-bottom-color:var(--dark3)}
+
+/* Content */
+.content{background:var(--dark3);margin:0 40px;border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:32px}
+.view{display:none}.view.active{display:block}
+
+/* Node styles */
+.node{cursor:pointer;transition:all .15s}
+.node:hover rect,.node:hover polygon{filter:brightness(1.15)}
+.node.selected rect{stroke-width:2!important}
+
+/* Detail panel */
+.detail{margin-top:24px;background:var(--dark4);border:1px solid var(--border);border-radius:10px;padding:18px 20px;min-height:64px;transition:all .3s}
+.detail h3{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);margin-bottom:10px}
+.detail ul{padding-left:18px;color:var(--text2);font-size:13px;line-height:2}
+.detail p{font-size:12px;color:var(--text3);font-style:italic}
+
+/* Nav buttons */
+.nav-btns{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.nav-btns button{padding:6px 18px;border-radius:6px;border:1px solid var(--border);background:var(--dark4);color:var(--text2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s}
+.nav-btns button:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Divider label */
+.div-label{font-size:11px;fill:#70706888;font-family:'DM Sans',sans-serif}
+
+@media(max-width:600px){
+  .header,.tabs,.content{padding-left:16px;padding-right:16px}
+  .content{margin:0 16px}
+  .header-left h1{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Ministério de Louvor</h1>
+    <p>Fluxograma — Estrutura e Ciclos</p>
+  </div>
+  <div class="header-badge">Igreja · Jovens</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="sv('estrutura',event)">Estrutura</button>
+  <button class="tab" onclick="sv('terca',event)">Terça</button>
+  <button class="tab" onclick="sv('domingo',event)">Domingo</button>
+  <button class="tab" onclick="sv('semanal',event)">Ciclo Semanal</button>
+  <button class="tab" onclick="sv('mensal',event)">Ciclo Mensal</button>
+  <button class="tab" onclick="sv('sabado',event)">Sábado</button>
+  <button class="tab" onclick="sv('equipe',event)">Equipe</button>
+</div>
+
+<div class="content">
+
+<!-- ESTRUTURA -->
+<div id="v-estrutura" class="view active">
+<svg width="100%" viewBox="0 0 680 530" role="img">
+  <defs>
+    <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <g class="node" id="ne-pastor" onclick="sd('pastor','e')">
+    <rect x="190" y="16" width="300" height="58" rx="8" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1"/>
+    <text x="340" y="39" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F0D080" font-family="Playfair Display,serif">Reverendo / Pastor</text>
+    <text x="340" y="59" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#C9A84C" font-family="DM Sans,sans-serif">José Américo</text>
+  </g>
+  <path d="M340 74 L340 102" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <g class="node" id="ne-anderson" onclick="sd('anderson','e')">
+    <rect x="190" y="102" width="300" height="58" rx="8" fill="rgba(123,111,212,0.15)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="122" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Líder do louvor / Escala dos Vocalistas</text>
+    <text x="340" y="143" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Anderson Nonato</text>
+  </g>
+  <path d="M340 160 L340 188" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <g class="node" id="ne-barbara" onclick="sd('barbara','e')">
+    <rect x="190" y="188" width="300" height="58" rx="8" fill="rgba(123,111,212,0.10)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="208" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Secretaria / Tesouraria</text>
+    <text x="340" y="228" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Bárbara Pelinca</text>
+  </g>
+  <path d="M340 246 L340 274" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <g class="node" id="ne-marcos" onclick="sd('marcos','e')">
+    <rect x="190" y="274" width="300" height="58" rx="8" fill="rgba(46,158,114,0.12)" stroke="#2E9E72" stroke-width="1"/>
+    <text x="340" y="294" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="500" fill="#5DC49A" font-family="DM Sans,sans-serif">Resp. pelos músicos / Instrumentos e equipamentos de som</text>
+    <text x="340" y="314" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#2E9E72" font-family="DM Sans,sans-serif">Marcos Aurélio</text>
+  </g>
+
+  <path d="M190 303 L100 303 L100 382" fill="none" stroke="#2E9E72" stroke-width="1.5" marker-end="url(#a1)"/>
+  <path d="M490 303 L580 303 L580 382" fill="none" stroke="#2E9E72" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <g class="node" id="ne-musicos" onclick="sd('musicos','e')">
+    <rect x="28" y="382" width="144" height="56" rx="8" fill="rgba(46,158,114,0.10)" stroke="#2E9E72" stroke-width="1"/>
+    <text x="100" y="404" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#5DC49A" font-family="DM Sans,sans-serif">Músicos</text>
+    <text x="100" y="424" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#2E9E72" font-family="DM Sans,sans-serif">Instrumentistas</text>
+  </g>
+
+  <g class="node" id="ne-vocalistas" onclick="sd('vocalistas','e')">
+    <rect x="508" y="382" width="144" height="56" rx="8" fill="rgba(46,158,114,0.10)" stroke="#2E9E72" stroke-width="1"/>
+    <text x="580" y="404" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#5DC49A" font-family="DM Sans,sans-serif">Ministros de louvor</text>
+    <text x="580" y="424" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#2E9E72" font-family="DM Sans,sans-serif">Backing e levitas</text>
+  </g>
+
+  <path d="M100 438 L100 468 L190 468" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a1)"/>
+  <path d="M580 438 L580 468 L490 468" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a1)"/>
+
+  <g class="node" id="ne-ensaios" onclick="sd('ensaios','e')">
+    <rect x="190" y="456" width="300" height="56" rx="8" fill="rgba(107,107,120,0.15)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="476" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Ensaios gerais</text>
+    <text x="340" y="496" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">Quarta 19h · Domingo 14h</text>
+  </g>
+</svg>
+<div class="detail" id="dp-e"><p>Clique em qualquer bloco para ver os detalhes</p></div>
+</div>
+
+<!-- TERÇA -->
+<div id="v-terca" class="view">
+<svg width="100%" viewBox="0 0 680 360" role="img">
+  <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <text class="div-label" x="340" y="14" text-anchor="middle" font-size="11">Terça-feira</text>
+
+  <g class="node" onclick="sd('ens_terca','t')">
+    <rect x="215" y="22" width="250" height="58" rx="8" fill="rgba(107,107,120,0.15)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="44" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Ensaio — culto do templo</text>
+    <text x="340" y="64" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">18h</text>
+  </g>
+  <path d="M340 80 L340 108" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <text class="div-label" x="340" y="122" text-anchor="middle" font-size="11">19h — simultâneos</text>
+  <path d="M340 130 L200 130 L200 155" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a2)"/>
+  <path d="M340 130 L480 130 L480 155" fill="none" stroke="#2E9E72" stroke-width="1.5" marker-end="url(#a2)"/>
+
+  <g class="node" onclick="sd('culto_terca','t')">
+    <rect x="76" y="155" width="248" height="66" rx="8" fill="rgba(123,111,212,0.12)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="200" y="176" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Culto de oração</text>
+    <text x="200" y="198" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Templo · toda a igreja · 19h30</text>
+  </g>
+
+  <g class="node" onclick="sd('overflow','t')">
+    <rect x="356" y="155" width="248" height="66" rx="8" fill="rgba(46,158,114,0.12)" stroke="#2E9E72" stroke-width="1"/>
+    <text x="480" y="176" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#5DC49A" font-family="DM Sans,sans-serif">OverFlow</text>
+    <text x="480" y="198" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#2E9E72" font-family="DM Sans,sans-serif">Laje · juventude · 19h15</text>
+  </g>
+
+  <path d="M200 221 L200 248" fill="none" stroke="#7B6FD4" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+  <path d="M480 221 L480 248" fill="none" stroke="#2E9E72" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+
+  <g class="node" onclick="sd('culto_fmt','t')">
+    <rect x="76" y="248" width="248" height="40" rx="8" fill="rgba(123,111,212,0.07)" stroke="rgba(123,111,212,0.3)" stroke-width="1"/>
+    <text x="200" y="268" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Equipe completa</text>
+  </g>
+
+  <g class="node" onclick="sd('overflow_fmt','t')">
+    <rect x="356" y="248" width="248" height="40" rx="8" fill="rgba(46,158,114,0.07)" stroke="rgba(46,158,114,0.3)" stroke-width="1"/>
+    <text x="480" y="268" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#2E9E72" font-family="DM Sans,sans-serif">Somente voz e violão</text>
+  </g>
+
+  <text class="div-label" x="340" y="325" text-anchor="middle">Os dois cultos acontecem ao mesmo tempo em locais diferentes</text>
+</svg>
+<div class="detail" id="dp-t"><p>Clique em qualquer bloco para ver os detalhes</p></div>
+</div>
+
+<!-- DOMINGO -->
+<div id="v-domingo" class="view">
+<svg width="100%" viewBox="0 0 680 500" role="img">
+  <defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <line x1="178" y1="20" x2="178" y2="488" stroke="rgba(201,168,76,0.15)" stroke-width="1" stroke-dasharray="3,4"/>
+  <text class="div-label" x="340" y="14" text-anchor="middle">Domingo — linha do tempo</text>
+
+  <text x="162" y="54" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">8h</text>
+  <g class="node" onclick="sd('ens_dev','d')">
+    <rect x="190" y="22" width="300" height="58" rx="8" fill="rgba(107,107,120,0.15)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="44" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Ensaio devocional</text>
+    <text x="340" y="64" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">Voz e teclado / violão</text>
+  </g>
+  <path d="M340 80 L340 108" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <text x="162" y="138" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">10h</text>
+  <g class="node" onclick="sd('culto_dev','d')">
+    <rect x="190" y="106" width="300" height="58" rx="8" fill="rgba(212,116,58,0.12)" stroke="#D4743A" stroke-width="1"/>
+    <text x="340" y="126" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F0A060" font-family="DM Sans,sans-serif">Culto devocional (pós-EBD)</text>
+    <text x="340" y="147" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#D4743A" font-family="DM Sans,sans-serif">Temporário · voz e teclado/violão</text>
+  </g>
+  <path d="M340 164 L340 192" fill="none" stroke="#D4743A" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <text x="162" y="222" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">14h</text>
+  <g class="node" onclick="sd('ens_geral','d')">
+    <rect x="190" y="190" width="300" height="58" rx="8" fill="rgba(107,107,120,0.15)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="212" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Ensaio geral 2</text>
+    <text x="340" y="232" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">Equipe completa</text>
+  </g>
+  <path d="M340 248 L340 276" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <text x="162" y="306" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">16h</text>
+  <g class="node" onclick="sd('devocional','d')">
+    <rect x="190" y="274" width="300" height="58" rx="8" fill="rgba(123,111,212,0.12)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="296" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Devocional da equipe</text>
+    <text x="340" y="316" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Palavra e oração</text>
+  </g>
+  <path d="M340 332 L340 360" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <text x="162" y="390" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">17h</text>
+  <g class="node" onclick="sd('culto_17','d')">
+    <rect x="190" y="358" width="300" height="58" rx="8" fill="rgba(192,74,48,0.15)" stroke="#C04A30" stroke-width="1"/>
+    <text x="340" y="380" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F08060" font-family="DM Sans,sans-serif">Culto principal</text>
+    <text x="340" y="400" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#C04A30" font-family="DM Sans,sans-serif">Equipe completa</text>
+  </g>
+</svg>
+<div class="detail" id="dp-d"><p>Clique em qualquer bloco para ver os detalhes</p></div>
+</div>
+
+<!-- CICLO SEMANAL -->
+<div id="v-semanal" class="view">
+<svg width="100%" viewBox="0 0 680 660" role="img">
+  <defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <g id="cs0" class="node" onclick="as(0)">
+    <rect x="215" y="14" width="250" height="58" rx="8" fill="rgba(123,111,212,0.12)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="36" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Seleção + envio de material</text>
+    <text x="340" y="56" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Segunda — terça</text>
+  </g>
+  <path d="M340 72 L340 98" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a4)"/>
+
+  <g id="cs1" class="node" onclick="as(1)">
+    <rect x="215" y="98" width="250" height="58" rx="8" fill="rgba(123,111,212,0.10)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="118" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Terça — ensaio 18h</text>
+    <text x="340" y="138" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Culto templo 19h30 · OverFlow 19h15</text>
+  </g>
+  <path d="M340 156 L340 182" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a4)"/>
+
+  <g id="cs2" class="node" onclick="as(2)">
+    <rect x="215" y="182" width="250" height="58" rx="8" fill="rgba(107,107,120,0.15)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="202" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Quarta — ensaio geral 1</text>
+    <text x="340" y="222" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">19h</text>
+  </g>
+  <path d="M340 240 L340 266" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a4)"/>
+
+  <g id="cs3" class="node" onclick="as(3)">
+    <rect x="215" y="266" width="250" height="58" rx="8" fill="rgba(123,111,212,0.08)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="286" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Estudo individual</text>
+    <text x="340" y="306" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Quinta — sexta</text>
+  </g>
+  <path d="M340 324 L340 350" fill="none" stroke="#C04A30" stroke-width="1.5" marker-end="url(#a4)"/>
+
+  <g id="cs4" class="node" onclick="as(4)">
+    <rect x="215" y="350" width="250" height="58" rx="8" fill="rgba(192,74,48,0.15)" stroke="#C04A30" stroke-width="1"/>
+    <text x="340" y="370" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F08060" font-family="DM Sans,sans-serif">Sábado — ensaio 15h30</text>
+    <text x="340" y="390" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#C04A30" font-family="DM Sans,sans-serif">Devocional 18h · Culto juventude 18h30</text>
+  </g>
+  <path d="M340 408 L340 434" fill="none" stroke="#D4743A" stroke-width="1.5" marker-end="url(#a4)"/>
+
+  <g id="cs5" class="node" onclick="as(5)">
+    <rect x="215" y="434" width="250" height="58" rx="8" fill="rgba(212,116,58,0.12)" stroke="#D4743A" stroke-width="1"/>
+    <text x="340" y="454" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F0A060" font-family="DM Sans,sans-serif">Dom. manhã — ensaio 8h</text>
+    <text x="340" y="474" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#D4743A" font-family="DM Sans,sans-serif">Culto devocional 10h</text>
+  </g>
+  <path d="M340 492 L340 518" fill="none" stroke="#C04A30" stroke-width="1.5" marker-end="url(#a4)"/>
+
+  <g id="cs6" class="node" onclick="as(6)">
+    <rect x="215" y="518" width="250" height="58" rx="8" fill="rgba(192,74,48,0.15)" stroke="#C04A30" stroke-width="1"/>
+    <text x="340" y="538" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F08060" font-family="DM Sans,sans-serif">Dom. tarde — ensaio 14h</text>
+    <text x="340" y="558" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#C04A30" font-family="DM Sans,sans-serif">Devocional 16h · Culto 17h</text>
+  </g>
+
+  <rect id="cs-ind" x="190" y="14" width="5" height="58" rx="3" fill="#7B6FD4"/>
+</svg>
+<div class="nav-btns">
+  <button onclick="ps()">← Anterior</button>
+  <button onclick="ns()">Próximo →</button>
+  <button onclick="ap()" id="bp">▶ Auto</button>
+</div>
+<div class="detail" id="dp-s"><p>Clique em um passo ou use os botões para navegar</p></div>
+</div>
+
+<!-- CICLO MENSAL -->
+<div id="v-mensal" class="view">
+<svg width="100%" viewBox="0 0 680 470" role="img">
+  <defs><marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <text class="div-label" x="340" y="14" text-anchor="middle">Todo mês</text>
+
+  <g class="node" onclick="sd('consagracao','m')">
+    <rect x="190" y="22" width="300" height="58" rx="8" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="1"/>
+    <text x="340" y="44" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F0D080" font-family="DM Sans,sans-serif">Consagração / Jejum</text>
+    <text x="340" y="64" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#C9A84C" font-family="DM Sans,sans-serif">Último domingo do mês — 7h</text>
+  </g>
+  <path d="M340 80 L340 108" fill="none" stroke="#C9A84C" stroke-width="1.5" marker-end="url(#a5)"/>
+
+  <g class="node" onclick="sd('semanas','m')">
+    <rect x="190" y="108" width="300" height="58" rx="8" fill="rgba(123,111,212,0.10)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="130" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Quartas normais — ensaio 19h</text>
+    <text x="340" y="150" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Semanas 1, 2 e 3 do mês</text>
+  </g>
+  <path d="M340 166 L340 192" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a5)"/>
+
+  <text class="div-label" x="340" y="206" text-anchor="middle">Última quarta do mês — 19h</text>
+  <path d="M340 214 L200 214 L200 240" fill="none" stroke="#2E9E72" stroke-width="1.5" marker-end="url(#a5)"/>
+  <path d="M340 214 L480 214 L480 240" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a5)"/>
+
+  <g class="node" onclick="sd('feedback','m')">
+    <rect x="76" y="240" width="248" height="66" rx="8" fill="rgba(46,158,114,0.12)" stroke="#2E9E72" stroke-width="1"/>
+    <text x="200" y="262" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#5DC49A" font-family="DM Sans,sans-serif">Reunião de feedback</text>
+    <text x="200" y="284" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#2E9E72" font-family="DM Sans,sans-serif">Meses 1 e 2 do trimestre</text>
+  </g>
+
+  <g class="node" onclick="sd('administrativa','m')">
+    <rect x="356" y="240" width="248" height="66" rx="8" fill="rgba(123,111,212,0.12)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="480" y="262" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Reunião administrativa</text>
+    <text x="480" y="284" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#7B6FD4" font-family="DM Sans,sans-serif">Mês 3 — trimestral</text>
+  </g>
+
+  <path d="M200 306 L200 358 L190 358" fill="none" stroke="#444450" stroke-width="1.5" marker-end="url(#a5)"/>
+  <path d="M480 306 L480 358 L490 358" fill="none" stroke="#444450" stroke-width="1.5" marker-end="url(#a5)"/>
+
+  <g class="node" onclick="sd('resultado','m')">
+    <rect x="190" y="346" width="300" height="58" rx="8" fill="rgba(107,107,120,0.12)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="368" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Próximo ciclo</text>
+    <text x="340" y="388" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">Ajustes aplicados para o mês seguinte</text>
+  </g>
+
+  <rect x="190" y="424" width="10" height="10" rx="2" fill="rgba(46,158,114,0.3)" stroke="#2E9E72" stroke-width="1"/>
+  <text x="206" y="429" dominant-baseline="central" font-size="11" fill="#6B6B78" font-family="DM Sans,sans-serif">Feedback — meses 1 e 2</text>
+  <rect x="370" y="424" width="10" height="10" rx="2" fill="rgba(123,111,212,0.2)" stroke="#7B6FD4" stroke-width="1"/>
+  <text x="386" y="429" dominant-baseline="central" font-size="11" fill="#6B6B78" font-family="DM Sans,sans-serif">Administrativa — trimestral (mês 3)</text>
+</svg>
+<div class="detail" id="dp-m"><p>Clique em qualquer bloco para ver os detalhes</p></div>
+</div>
+
+
+<!-- SÁBADO -->
+<div id="v-sabado" class="view">
+<svg width="100%" viewBox="0 0 680 420" role="img">
+  <defs><marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <line x1="178" y1="20" x2="178" y2="390" stroke="rgba(201,168,76,0.15)" stroke-width="1" stroke-dasharray="3,4"/>
+  <text class="div-label" x="340" y="14" text-anchor="middle">Sábado — Culto da Juventude</text>
+
+  <text x="162" y="54" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">15h30</text>
+  <g class="node" onclick="sd('ens_sab','sb')">
+    <rect x="190" y="22" width="300" height="58" rx="8" fill="rgba(107,107,120,0.15)" stroke="#555560" stroke-width="1"/>
+    <text x="340" y="44" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#9898A8" font-family="DM Sans,sans-serif">Ensaio</text>
+    <text x="340" y="64" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#6B6B78" font-family="DM Sans,sans-serif">Equipe completa</text>
+  </g>
+  <path d="M340 80 L340 108" fill="none" stroke="#555560" stroke-width="1.5" marker-end="url(#a6)"/>
+
+  <text x="162" y="138" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">18h</text>
+  <g class="node" onclick="sd('dev_sab','sb')">
+    <rect x="190" y="106" width="300" height="58" rx="8" fill="rgba(123,111,212,0.12)" stroke="#7B6FD4" stroke-width="1"/>
+    <text x="340" y="128" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#A89EE8" font-family="DM Sans,sans-serif">Devocional da equipe</text>
+    <text x="340" y="148" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#7B6FD4" font-family="DM Sans,sans-serif">Palavra e oração antes do culto</text>
+  </g>
+  <path d="M340 164 L340 192" fill="none" stroke="#7B6FD4" stroke-width="1.5" marker-end="url(#a6)"/>
+
+  <text x="162" y="222" text-anchor="end" font-size="11" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">18h30</text>
+  <g class="node" onclick="sd('culto_sab','sb')">
+    <rect x="190" y="190" width="300" height="58" rx="8" fill="rgba(192,74,48,0.15)" stroke="#C04A30" stroke-width="1"/>
+    <text x="340" y="212" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="#F08060" font-family="DM Sans,sans-serif">Culto da Juventude</text>
+    <text x="340" y="232" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#C04A30" font-family="DM Sans,sans-serif">Equipe completa · só juventude</text>
+  </g>
+
+  <!-- Badge juventude -->
+  <rect x="190" y="270" width="300" height="36" rx="8" fill="rgba(46,158,114,0.07)" stroke="rgba(46,158,114,0.2)" stroke-width="1"/>
+  <text x="340" y="288" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#2E9E72" font-family="DM Sans,sans-serif">Formato: igual ao culto principal de domingo 17h</text>
+</svg>
+<div class="detail" id="dp-sb"><p>Clique em qualquer bloco para ver os detalhes</p></div>
+</div>
+
+<!-- EQUIPE -->
+<div id="v-equipe" class="view">
+<style>
+.equipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:4px 0}
+.instrumento-card{background:var(--dark4);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
+.instrumento-card:hover{border-color:rgba(201,168,76,0.3)}
+.instrumento-header{padding:12px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.instrumento-icon{font-size:20px;line-height:1}
+.instrumento-nome{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold);font-weight:500}
+.instrumento-count{font-size:11px;color:var(--text3);margin-top:1px}
+.instrumento-membros{padding:12px 16px;display:flex;flex-direction:column;gap:6px}
+.membro{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.membro-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.equipe-total{margin-top:20px;padding:14px 18px;background:var(--dark4);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.equipe-total-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+.equipe-total-num{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold)}
+.equipe-legenda{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px}
+.eq-leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+.eq-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+</style>
+
+<div class="equipe-grid">
+  <div class="instrumento-card">
+    <div class="instrumento-header">
+      <div class="instrumento-icon">🎸</div>
+      <div>
+        <div class="instrumento-nome">Baixo</div>
+        <div class="instrumento-count">2 membros</div>
+      </div>
+    </div>
+    <div class="instrumento-membros">
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Caua</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Luan</div>
+    </div>
+  </div>
+
+  <div class="instrumento-card">
+    <div class="instrumento-header">
+      <div class="instrumento-icon">🎸</div>
+      <div>
+        <div class="instrumento-nome">Violão</div>
+        <div class="instrumento-count">4 membros</div>
+      </div>
+    </div>
+    <div class="instrumento-membros">
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Felipe</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Sidicley</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Pedro</div>
+      <div class="membro"><div class="membro-dot" style="background:#F0A060"></div>Leonardo</div>
+    </div>
+  </div>
+
+  <div class="instrumento-card">
+    <div class="instrumento-header">
+      <div class="instrumento-icon">🎸</div>
+      <div>
+        <div class="instrumento-nome">Guitarra</div>
+        <div class="instrumento-count">3 membros</div>
+      </div>
+    </div>
+    <div class="instrumento-membros">
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Gustavo</div>
+      <div class="membro"><div class="membro-dot" style="background:#F0A060"></div>Deivid</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Wilson</div>
+    </div>
+  </div>
+
+  <div class="instrumento-card">
+    <div class="instrumento-header">
+      <div class="instrumento-icon">🥁</div>
+      <div>
+        <div class="instrumento-nome">Bateria</div>
+        <div class="instrumento-count">4 membros</div>
+      </div>
+    </div>
+    <div class="instrumento-membros">
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Benjamin</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>GPS</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Gabriel</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Marquinhos</div>
+    </div>
+  </div>
+
+  <div class="instrumento-card">
+    <div class="instrumento-header">
+      <div class="instrumento-icon">🎹</div>
+      <div>
+        <div class="instrumento-nome">Teclado</div>
+        <div class="instrumento-count">2 membros</div>
+      </div>
+    </div>
+    <div class="instrumento-membros">
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Anderson</div>
+      <div class="membro"><div class="membro-dot" style="background:#5DC49A"></div>Guilherme</div>
+    </div>
+  </div>
+
+  <div class="instrumento-card" style="grid-column: span 2">
+    <div class="instrumento-header">
+      <div class="instrumento-icon">🎤</div>
+      <div>
+        <div class="instrumento-nome">Vocal / Ministros de louvor</div>
+        <div class="instrumento-count">14 membros</div>
+      </div>
+    </div>
+    <div class="instrumento-membros" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px">
+      <div class="membro"><div class="membro-dot" style="background:#F0A060"></div>Bárbara</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Cely</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Mille</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Thauane</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Celine</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Genilza</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Jane Gleisi</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Klabson</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Jana Motta</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Hanny</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Vitória</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Sorriso</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Anderson</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Marquinhos</div>
+      <div class="membro"><div class="membro-dot" style="background:#F0A060"></div>Deivid</div>
+      <div class="membro"><div class="membro-dot" style="background:#A89EE8"></div>Décio</div>
+      <div class="membro"><div class="membro-dot" style="background:#F0A060"></div>Leonardo</div>
+    </div>
+  </div>
+</div>
+
+<div class="equipe-total">
+  <div>
+    <div class="equipe-total-label">Total da equipe</div>
+    <div class="equipe-legenda">
+      <div class="eq-leg"><div class="eq-dot" style="background:#5DC49A"></div>Instrumentistas — 14</div>
+      <div class="eq-leg"><div class="eq-dot" style="background:#A89EE8"></div>Ministros de louvor — 16</div>
+      <div class="eq-leg"><div class="eq-dot" style="background:#F0A060"></div>Dupla função — 5 (Anderson, Bárbara, Marquinhos, Deivid, Leonardo)</div>
+    </div>
+  </div>
+  <div class="equipe-total-num">30 <span style="font-size:13px;color:var(--text3);font-family:'DM Sans',sans-serif">membros</span></div>
+</div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+const DE={
+  pastor:{t:'Pastor — José Américo',i:['Visão espiritual e direção do ministério','Alinha o tema dos cultos com o líder de louvor','Músicas novas precisam passar pela aprovação do pastor antes de entrar no repertório','Autoridade máxima sobre as decisões do ministério']},
+  anderson:{t:'Líder do louvor — Anderson Nonato',i:['Define e comunica o repertório semanal','Monta a escala dos ministros de louvor','Conduz os dois ensaios gerais','Cuida do desenvolvimento espiritual da equipe','Alinha com o pastor e com Bárbara']},
+  barbara:{t:'Secretaria / Tesouraria — Bárbara Pelinca',i:['Controle de presença e cumprimento de escala','Gestão financeira do ministério','Organização das reuniões de feedback e administrativa','Coordena Marcos Aurélio']},
+  marcos:{t:'Resp. pelos músicos — Marcos Aurélio',i:['Monta a escala dos instrumentistas','Responsável pelos instrumentos e equipamentos de som do ministério','Acompanha o desenvolvimento técnico dos músicos','Garante afinação e preparação nos ensaios','Marcos e Bárbara caminham juntos na parte operacional do ministério']},
+  musicos:{t:'Músicos — instrumentistas',i:['Estudam as cifras antes do ensaio de quarta','Chegam no ensaio já sabendo as músicas','Mantêm volume equilibrado','Atenção nas viradas e cortes do líder']},
+  vocalistas:{t:'Ministros de louvor',i:['Chegam sabendo letra e melodia de cor','Definem lead, backing 1 e backing 2','Aquecimento vocal antes de cada ensaio','Ouvem mais do que cantam']},
+  ensaios:{t:'Ensaios gerais',i:['Ensaio geral 1 — quarta 19h: primeiro contato coletivo com o repertório','Ensaio geral 2 — domingo 14h: ensaio final na ordem real do culto','Devocional da equipe às 16h antes do culto das 17h']}
+};
+const DT={
+  ens_terca:{t:'Ensaio — culto do templo · 18h',i:['Ensaio do repertório do culto de oração','Toda a equipe do templo presente','Resolve arranjos e transições antes do culto das 19h30']},
+  culto_terca:{t:'Culto de oração — templo · 19h30',i:['Aberto para toda a igreja','Equipe completa de louvor','Conduzido pelo líder e alinhado com o pastor']},
+  culto_fmt:{t:'Formato — culto do templo',i:['Equipe completa: músicos e ministros de louvor','PA e instrumentação completa']},
+  overflow:{t:'OverFlow — laje · 19h15',i:['Exclusivo para a juventude','Acontece simultâneo ao culto do templo','Ambiente mais informal e dinâmico']},
+  overflow_fmt:{t:'Formato — OverFlow',i:['Somente voz e violão','Sem PA completo — clima intimista','Foco na juventude e adoração simples']}
+};
+const DD={
+  ens_dev:{t:'Ensaio devocional · 8h',i:['Ensaio do culto pós-EBD','Formato reduzido: voz e teclado ou voz e violão','Preparo rápido antes do culto das 10h']},
+  culto_dev:{t:'Culto devocional pós-EBD · 10h',i:['Temporário — formato simplificado','Voz e teclado ou voz e violão','No futuro terá o mesmo formato do culto das 17h']},
+  ens_geral:{t:'Ensaio geral 2 · 14h',i:['Equipe completa reunida','Passa o repertório na ordem real do culto das 17h','Ajuste fino de volumes e posicionamento no PA']},
+  devocional:{t:'Devocional da equipe · 16h',i:['Momento espiritual antes do culto','Palavra, oração e alinhamento da equipe','Conduzido pelo líder ou pastor']},
+  culto_17:{t:'Culto principal · 17h',i:['Equipe completa de músicos e ministros de louvor','Ministrar com sensibilidade ao pastor','Após o culto, celebramos o que Deus fez e refletimos juntos sobre como servir melhor na próxima semana']}
+};
+const DS={
+  0:{t:'Seleção + envio de material — seg. a ter.',i:['Selecionar 4 a 6 músicas conforme o tema','Enviar cifras e áudios até terça para a equipe estudar','O repertório passa pela liderança para alinhamento com a visão do culto — a aprovação é um processo de comunhão, não de controle']},
+  1:{t:'Terça — ensaio 18h e cultos',i:['18h — ensaio do culto do templo','19h15 — OverFlow na laje (voz e violão)','19h30 — culto de oração no templo (equipe completa)']},
+  2:{t:'Quarta — ensaio geral 1 · 19h',i:['Chegar preparado é um ato de respeito com o grupo e com o ministério — o ensaio é para afinar juntos, não para aprender do zero','Aquecimento vocal coletivo','Passa o repertório completo na ordem','Resolve arranjos, transições e afinação']},
+  3:{t:'Estudo individual — qui. a sáb.',i:['A preparação individual é também um momento de comunhão pessoal com Deus antes de servir','Reforça o que ficou pendente no ensaio','Revisa partes marcadas na cifra','Pratica músicas novas ou difíceis']},
+  4:{t:'Sábado — culto da juventude',i:['15h30 — ensaio com equipe completa','18h — devocional da equipe: palavra, oração e alinhamento','18h30 — culto da juventude (formato igual ao de domingo 17h)','Exclusivo para jovens']},
+  5:{t:'Domingo manhã',i:['8h — ensaio do culto devocional','10h — culto devocional pós-EBD (voz e teclado/violão)','Formato temporário — futuro igual ao culto das 17h']},
+  6:{t:'Domingo tarde',i:['14h — ensaio geral 2 (equipe completa)','16h — devocional da equipe','17h — culto principal']}
+};
+const DM={
+  consagracao:{t:'Consagração / Jejum — último domingo 7h',i:['Momento espiritual de toda a equipe antes do mês','Jejum e oração coletiva','Alinhamento espiritual e renovação de compromisso']},
+  semanas:{t:'Quartas normais — ensaio 19h',i:['Semanas 1, 2 e 3 seguem o ciclo semanal normal','Ensaio geral 1 com o repertório da semana']},
+  feedback:{t:'Reunião de feedback — meses 1 e 2',i:['A reunião é um espaço de crescimento coletivo, aberta a quem serviu no mês — a presença é um compromisso de desenvolvimento, não uma cobrança','Avaliação dos ensaios e cultos do mês','Pontos de celebração e de crescimento compartilhados','Anderson e Bárbara conduzem']},
+  administrativa:{t:'Reunião administrativa — trimestral (mês 3)',i:['Substitui o feedback naquele mês','Revisão de escalas, finanças e processos','Planejamento do trimestre seguinte','Anderson, Bárbara e Marcos presentes']},
+  resultado:{t:'Próximo ciclo',i:['Ajustes de escala aplicados por Marcos e Bárbara','Anderson atualiza repertório e comunicação','Equipe inicia novo ciclo com melhorias aplicadas']}
+};
+
+const DSB={
+  ens_sab:{t:'Ensaio · 15h30',i:['Equipe completa reunida às 15h30','Passa o repertório na ordem real do culto','Ajuste de volumes e posicionamento','Tempo para afinar arranjos e transições']},
+  dev_sab:{t:'Devocional da equipe · 18h',i:['Momento espiritual antes do culto da juventude','Palavra, oração e alinhamento da equipe','Foco no propósito de servir a juventude com excelência']},
+  culto_sab:{t:'Culto da Juventude · 18h30',i:['Exclusivo para jovens','Equipe completa — mesmo formato do culto de domingo 17h','Ministrar com sensibilidade ao pastor e ao público jovem','Avaliação após o culto: o que Deus fez e como crescer']}
+};
+const stepY=[14,98,182,266,350,434,518];
+const stepC=['#7B6FD4','#7B6FD4','#555560','#7B6FD4','#C04A30','#D4743A','#C04A30'];
+let cs=-1,timer=null;
+
+function sv(v,e){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('v-'+v).classList.add('active');
+  e.target.classList.add('active');
+  if(timer){clearInterval(timer);timer=null;document.getElementById('bp').textContent='▶ Auto';}
+}
+function render(dp,d){
+  document.getElementById(dp).innerHTML='<h3>'+d.t+'</h3><ul>'+d.i.map(i=>'<li>'+i+'</li>').join('')+'</ul>';
+}
+function sd(k,scope){
+  const maps={e:DE,t:DT,d:DD,m:DM,sb:DSB};
+  const d=maps[scope][k];if(!d)return;
+  render('dp-'+scope,d);
+}
+function as(i){
+  cs=i;
+  const ind=document.getElementById('cs-ind');
+  ind.setAttribute('y',stepY[i]);ind.setAttribute('fill',stepC[i]);
+  render('dp-s',DS[i]);
+  [0,1,2,3,4,5,6].forEach(j=>{
+    const el=document.getElementById('cs'+j);if(!el)return;
+    const r=el.querySelector('rect');
+    r.setAttribute('stroke-width',j===i?'2':'1');
+    r.style.filter=j===i?'brightness(1.2)':'';
+  });
+}
+function ns(){as(cs<6?cs+1:0);}
+function ps(){as(cs<=0?6:cs-1);}
+function ap(){
+  if(timer){clearInterval(timer);timer=null;document.getElementById('bp').textContent='▶ Auto';}
+  else{if(cs<0)as(0);timer=setInterval(()=>as(cs<6?cs+1:0),2200);document.getElementById('bp').textContent='⏹ Parar';}
+}
+</script>
+</body>
+</html>
